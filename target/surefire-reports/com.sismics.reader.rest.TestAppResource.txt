@@ -1,0 +1,16 @@
+-------------------------------------------------------------------------------
+Test set: com.sismics.reader.rest.TestAppResource
+-------------------------------------------------------------------------------
+Tests run: 3, Failures: 0, Errors: 2, Skipped: 1, Time elapsed: 0.973 sec <<< FAILURE! - in com.sismics.reader.rest.TestAppResource
+testLogResource(com.sismics.reader.rest.TestAppResource)  Time elapsed: 0.905 sec  <<< ERROR!
+com.sun.jersey.test.framework.spi.container.TestContainerException: java.net.BindException: Address already in use
+	at com.sismics.reader.rest.TestAppResource.<init>(TestAppResource.java:18)
+Caused by: java.net.BindException: Address already in use
+	at com.sismics.reader.rest.TestAppResource.<init>(TestAppResource.java:18)
+
+testAppResource(com.sismics.reader.rest.TestAppResource)  Time elapsed: 0.009 sec  <<< ERROR!
+com.sun.jersey.test.framework.spi.container.TestContainerException: java.net.BindException: Address already in use
+	at com.sismics.reader.rest.TestAppResource.<init>(TestAppResource.java:18)
+Caused by: java.net.BindException: Address already in use
+	at com.sismics.reader.rest.TestAppResource.<init>(TestAppResource.java:18)
+

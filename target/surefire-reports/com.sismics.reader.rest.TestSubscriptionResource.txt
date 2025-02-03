@@ -1,0 +1,40 @@
+-------------------------------------------------------------------------------
+Test set: com.sismics.reader.rest.TestSubscriptionResource
+-------------------------------------------------------------------------------
+Tests run: 8, Failures: 0, Errors: 6, Skipped: 2, Time elapsed: 1.366 sec <<< FAILURE! - in com.sismics.reader.rest.TestSubscriptionResource
+testArticleDate(com.sismics.reader.rest.TestSubscriptionResource)  Time elapsed: 1.258 sec  <<< ERROR!
+com.sun.jersey.test.framework.spi.container.TestContainerException: java.net.BindException: Address already in use
+	at com.sismics.reader.rest.TestSubscriptionResource.<init>(TestSubscriptionResource.java:28)
+Caused by: java.net.BindException: Address already in use
+	at com.sismics.reader.rest.TestSubscriptionResource.<init>(TestSubscriptionResource.java:28)
+
+testSubscriptionImportTakeout(com.sismics.reader.rest.TestSubscriptionResource)  Time elapsed: 0.006 sec  <<< ERROR!
+com.sun.jersey.test.framework.spi.container.TestContainerException: java.net.BindException: Address already in use
+	at com.sismics.reader.rest.TestSubscriptionResource.<init>(TestSubscriptionResource.java:28)
+Caused by: java.net.BindException: Address already in use
+	at com.sismics.reader.rest.TestSubscriptionResource.<init>(TestSubscriptionResource.java:28)
+
+testSubscriptionAddResource(com.sismics.reader.rest.TestSubscriptionResource)  Time elapsed: 0.004 sec  <<< ERROR!
+com.sun.jersey.test.framework.spi.container.TestContainerException: java.net.BindException: Address already in use
+	at com.sismics.reader.rest.TestSubscriptionResource.<init>(TestSubscriptionResource.java:28)
+Caused by: java.net.BindException: Address already in use
+	at com.sismics.reader.rest.TestSubscriptionResource.<init>(TestSubscriptionResource.java:28)
+
+testSubscriptionSynchronizationResource(com.sismics.reader.rest.TestSubscriptionResource)  Time elapsed: 0.004 sec  <<< ERROR!
+com.sun.jersey.test.framework.spi.container.TestContainerException: java.net.BindException: Address already in use
+	at com.sismics.reader.rest.TestSubscriptionResource.<init>(TestSubscriptionResource.java:28)
+Caused by: java.net.BindException: Address already in use
+	at com.sismics.reader.rest.TestSubscriptionResource.<init>(TestSubscriptionResource.java:28)
+
+testSubscriptionImportOpml(com.sismics.reader.rest.TestSubscriptionResource)  Time elapsed: 0.005 sec  <<< ERROR!
+com.sun.jersey.test.framework.spi.container.TestContainerException: java.net.BindException: Address already in use
+	at com.sismics.reader.rest.TestSubscriptionResource.<init>(TestSubscriptionResource.java:28)
+Caused by: java.net.BindException: Address already in use
+	at com.sismics.reader.rest.TestSubscriptionResource.<init>(TestSubscriptionResource.java:28)
+
+testDeletedArticle(com.sismics.reader.rest.TestSubscriptionResource)  Time elapsed: 0.003 sec  <<< ERROR!
+com.sun.jersey.test.framework.spi.container.TestContainerException: java.net.BindException: Address already in use
+	at com.sismics.reader.rest.TestSubscriptionResource.<init>(TestSubscriptionResource.java:28)
+Caused by: java.net.BindException: Address already in use
+	at com.sismics.reader.rest.TestSubscriptionResource.<init>(TestSubscriptionResource.java:28)
+

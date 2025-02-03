@@ -1,0 +1,10 @@
+-------------------------------------------------------------------------------
+Test set: com.sismics.reader.rest.TestStarredResource
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 1.355 sec <<< FAILURE! - in com.sismics.reader.rest.TestStarredResource
+testStarredResource(com.sismics.reader.rest.TestStarredResource)  Time elapsed: 1.338 sec  <<< ERROR!
+com.sun.jersey.test.framework.spi.container.TestContainerException: java.net.BindException: Address already in use
+	at com.sismics.reader.rest.TestStarredResource.<init>(TestStarredResource.java:18)
+Caused by: java.net.BindException: Address already in use
+	at com.sismics.reader.rest.TestStarredResource.<init>(TestStarredResource.java:18)
+
