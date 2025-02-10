@@ -1,33 +1,60 @@
-name: Automated Design Smell Detection & Refactoring
+# .github/workflows/git.yml
+
+name: Refactor Code and Create PR
 
 on:
   push:
     branches:
-      - main
-  pull_request:
-    branches:
-      - main
-  workflow_dispatch:
+      - master  # Trigger on pushes to the main branch
 
 jobs:
-  detect_and_refactor:
+  refactor-and-pr:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+    # Step 1: Checkout the repository
+    - name: Checkout code
+      uses: actions/checkout@v3
+      with:
+        ref: master  # The branch to check out
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.9'
+    # Step 2: Set up Python
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
 
-      - name: Install dependencies
-        run: |
-          pip install requests gitpython pygithub python-dotenv
+    # Step 3: Install dependencies
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install requests
 
-      - name: Run design smell detection and refactoring
-        env:
-          GITHUB_TOKEN: ${{ secrets.CLASS_TOKEN }}
-          HF_API_KEY: ${{ secrets.HUGGING_TOKEN }}
-        run: python check_design_smells.py
+    # Step 4: Run the refactoring script
+    - name: Refactor code
+      run: |
+        python check_design_smells.py  # Replace with the actual file path
+
+    # Step 5: Commit changes
+    - name: Commit changes
+      run: |
+        git config --global user.name "praveenkumar911"
+        git config --global user.email "praveenkumarpalaboyina@gmail.com"
+        git add .
+        git commit -m "Refactor code using LLM" || echo "No changes to commit"
+
+    # Step 6: Push changes to a new branch
+    - name: Push changes to new branch
+      run: |
+        git checkout -b refactor-branch
+        git push origin refactor-branch
+
+    # Step 7: Create a pull request
+    - name: Create Pull Request
+      uses: peter-evans/create-pull-request@v4
+      with:
+        token: ${{ secrets.CLASS_TOKEN }}
+        title: "Refactor Code Using LLM"
+        body: "Automated refactoring of code using LLM."
+        base: main
+        branch: refactor-branch
