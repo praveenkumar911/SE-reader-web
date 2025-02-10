@@ -7,7 +7,7 @@ on:
   pull_request:
     branches:
       - main
-  workflow_dispatch:  # Allows manual triggering
+  workflow_dispatch:
 
 jobs:
   detect_and_refactor:
@@ -24,10 +24,10 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install requests gitpython pygithub
+          pip install openai gitpython pygithub
 
       - name: Run design smell detection and refactoring
         env:
           GITHUB_TOKEN: ${{ secrets.CLASS_TOKEN }}
-          HF_API_KEY: ${{ secrets.HUGGING_TOKEN }}
-        run: python check_design_smells.py  # Ensure your script is named correctly
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: python Openai_Api_Config.py
