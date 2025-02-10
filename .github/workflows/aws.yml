@@ -1,8 +1,12 @@
 name: Automated Design Smell Detection & Refactoring
 
 on:
-  schedule:
-    - cron: '0 0 * * *'  # Runs daily at midnight
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
   workflow_dispatch:  # Allows manual triggering
 
 jobs:
@@ -26,4 +30,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.CLASS_TOKEN }}
           HF_API_KEY: ${{ secrets.HUGGING_TOKEN }}
-        run: python check_design_smells.py  # Ensure your main script is named `script.py`
+        run: python check_design_smells.py  # Ensure your script is named correctly
