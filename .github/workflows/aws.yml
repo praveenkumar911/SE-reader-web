@@ -1,17 +1,20 @@
-name: Design Smell Detection and Fix Workflow
+name: Check and Fix Design Smells
 
 on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
-  detect-and-fix-design-smells:
+  design_smell_check:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -20,29 +23,17 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          pip install libcst
+          pip install requests
 
-      - name: Detect and Fix Design Smells
+      - name: Check for Design Smells
         run: |
-          python detect_and_fix_smells.py
-
-      - name: Create New Branch
-        run: |
-          git config user.name "praveenkumar911"
-          git config user.email "praveenkumarpalaboyina@gmail.com"
-          git checkout -b design-smell-fixes
+          python check_design_smells.py
 
       - name: Commit and Push Changes
         run: |
-          git remote set-url origin https://x-access-token:${{ secrets.CLASS_TOKEN }}@github.com/praveenkumar911/SE-reader-web.git
+          git config --global user.name 'github-actions'
+          git config --global user.email 'actions@github.com'
+          git checkout -b design-smell-fixes
           git add .
-          git commit -m "Automated fixes for design smells"
+          git commit -m "Fix design smells"
           git push origin design-smell-fixes
-
-      - name: Open Pull Request
-        uses: repo-sync/pull-request@v2
-        with:
-          destination_branch: "main"
-          pr_title: "Automated Fixes for Design Smells"
-          pr_body: "This PR contains automated fixes for detected design smells."
-          github_token: ${{ secrets.CLASS_TOKEN }}
