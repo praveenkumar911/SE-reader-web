@@ -30,10 +30,14 @@ def refactor_code(file_path):
     with open(file_path, 'w') as file:
         file.write(refactored_code)
 
-def refactor_all_files(repo_path, file_extensions=None):
-    if file_extensions is None:
-        file_extensions = ['.py']  # Default to Python files
+def refactor_all_files():
+    # Default file extensions to refactor (e.g., Python files)
+    file_extensions = ['.py']  # You can add more extensions like ['.py', '.js', '.java']
     
+    # Get the current working directory (root of the repository)
+    repo_path = os.getcwd()
+    
+    # Walk through the directory structure and refactor files
     for root, _, files in os.walk(repo_path):
         for file in files:
             if any(file.endswith(ext) for ext in file_extensions):
@@ -42,9 +46,4 @@ def refactor_all_files(repo_path, file_extensions=None):
                 refactor_code(file_path)
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print("Usage: python refactor.py <repo_path>")
-        sys.exit(1)
-    
-    repo_path = sys.argv[1]
-    refactor_all_files(repo_path)
+    refactor_all_files()
