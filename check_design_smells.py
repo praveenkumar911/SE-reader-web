@@ -8,64 +8,60 @@ from dotenv import load_dotenv
 # Load environment variables
 load_dotenv()
 
-github_token = os.getenv("GITHUB_TOKEN")
-hf_api_key = os.getenv("HF_API_KEY")
+GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
+HF_API_KEY = os.getenv("HF_API_KEY")
 
-repo_url = "https://github.com/praveenkumar911/SE-reader-web"
-repo_path = "./repo"
-API_URL = "https://api-inference.huggingface.co/models/bigcode/starcoder"
-headers = {"Authorization": f"Bearer {hf_api_key}"}
+REPO_URL = "https://github.com/praveenkumar911/SE-reader-web"
+REPO_PATH = "./repo"
+API_URL = "https://api-inference.huggingface.co/models/mistralai/Mixtral-8x7B-Instruct-v0.1"
+HEADERS = {"Authorization": f"Bearer {HF_API_KEY}"}
 
-def query(payload):
-    response = requests.post(API_URL, headers=headers, json=payload)
+def query_llm(prompt):
+    response = requests.post(API_URL, headers=HEADERS, json={"inputs": f"</s>[INST]{prompt}[/INST]"})
     try:
         output = response.json()
-        if isinstance(output, dict) and "generated_text" in output:
-            return output["generated_text"]
-        else:
-            print("Unexpected response format:", json.dumps(output, indent=2))
-            return "Error: Unexpected response format"
+        generated_text = output[0]['generated_text']
+        start_index = generated_text.find('[/INST]') + len('[/INST]')
+        return generated_text[start_index:].strip()
     except Exception as e:
-        print("Error parsing response:", str(e))
-        return "Error: Failed to parse API response"
+        print("Error in LLM response:", str(e))
+        return "LLM analysis failed"
 
 def clone_repo():
-    if os.path.exists(repo_path):
-        os.system(f"rm -rf {repo_path}")
-    Repo.clone_from(repo_url, repo_path)
+    if os.path.exists(REPO_PATH):
+        os.system(f"rm -rf {REPO_PATH}")
+    Repo.clone_from(REPO_URL, REPO_PATH)
     print("Repository cloned successfully.")
 
 def detect_design_smells():
     smells = {}
-    for root, _, files in os.walk(repo_path):
+    for root, _, files in os.walk(REPO_PATH):
         for file in files:
             if file.endswith(".py"):
                 file_path = os.path.join(root, file)
                 with open(file_path, "r") as f:
                     code = f.read()
-                smells[file_path] = analyze_code_with_llm(code)
+                prompt = f"Analyze the following code and detect design smells:\n{code}"
+                smells[file_path] = query_llm(prompt)
     return smells
-
-def analyze_code_with_llm(code):
-    prompt = f"Detect code smells and suggest refactoring:\n{code}"
-    generated_text = query({"inputs": prompt})
-    return generated_text if not generated_text.startswith("Error:") else "LLM analysis failed"
 
 def apply_refactoring(smells):
     refactored_code = {}
     for file, issues in smells.items():
         prompt = f"Refactor the following code while preserving functionality:\n{issues}"
-        output = query({"inputs": prompt})
-        refactored_code[file] = output if not output.startswith("Error:") else "Refactoring failed"
-        with open(file, "w") as f:
-            f.write(refactored_code[file])
+        output = query_llm(prompt)
+        refactored_code[file] = output if output != "LLM analysis failed" else "Refactoring failed"
+
+        if refactored_code[file] != "Refactoring failed":
+            with open(file, "w") as f:
+                f.write(refactored_code[file])
     return refactored_code
 
 def create_pull_request(smells, refactored_code):
-    g = Github(github_token)
+    g = Github(GITHUB_TOKEN)
     repo = g.get_repo("praveenkumar911/SE-reader-web")
     branch_name = "refactor-design-smells"
-    
+
     try:
         repo.get_branch(branch_name)
         print(f"Branch {branch_name} already exists.")
