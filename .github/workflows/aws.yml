@@ -24,10 +24,10 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install openai gitpython pygithub
+          pip install requests gitpython pygithub
 
       - name: Run design smell detection and refactoring
         env:
           GITHUB_TOKEN: ${{ secrets.CLASS_TOKEN }}
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          HF_API_KEY: ${{ secrets.HUGGING_TOKEN }}
         run: python check_design_smells.py
