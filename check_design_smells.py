@@ -13,7 +13,7 @@ repo_path = "./repo"
 def query(prompt):
     try:
         response = openai.ChatCompletion.create(
-            model="gpt-4o-mini",
+            model="gpt-4o",
             messages=[{"role": "system", "content": "You are an expert code reviewer."},
                       {"role": "user", "content": prompt}]
         )
