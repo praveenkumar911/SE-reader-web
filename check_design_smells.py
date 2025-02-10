@@ -1,30 +1,26 @@
 import os
 import json
-import requests
+import openai
 from github import Github
 from git import Repo, GitCommandError
 
-github_token = "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"
-hf_api_key = "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"
+github_token = "${{ secrets.CLASS_TOKEN }}"
+openai_api_key = "${{ secrets.OPENAI_API_KEY }}"
 
 repo_url = "https://github.com/praveenkumar911/SE-reader-web"
 repo_path = "./repo"
 
-API_URL = "https://api-inference.huggingface.co/models/mistralai/Mixtral-8x7B-Instruct-v0.1"
-headers = {"Authorization": f"Bearer {hf_api_key}"}
-
-def query(payload):
-    response = requests.post(API_URL, headers=headers, json=payload)
+def query(prompt):
     try:
-        output = response.json()
-        if isinstance(output, list) and len(output) > 0 and 'generated_text' in output[0]:
-            return output[0]['generated_text']
-        else:
-            print("Unexpected response format:", json.dumps(output, indent=2))
-            return "Error: Unexpected response format"
+        response = openai.ChatCompletion.create(
+            model="gpt-4o-mini",
+            messages=[{"role": "system", "content": "You are an expert code reviewer."},
+                      {"role": "user", "content": prompt}]
+        )
+        return response["choices"][0]["message"]["content"].strip()
     except Exception as e:
-        print("Error parsing response:", str(e))
-        return "Error: Failed to parse API response"
+        print("Error calling OpenAI API:", str(e))
+        return "Error: API request failed"
 
 def clone_repo():
     if os.path.exists(repo_path):
@@ -44,23 +40,18 @@ def detect_design_smells():
     return smells
 
 def analyze_code_with_llm(code):
-    generated_text = query({"inputs": f"</s>[INST]Detect code smells and suggest refactoring:\n{code}[/INST]"})
-    if generated_text.startswith("Error:"):
-        return "LLM analysis failed"
-    start_index = generated_text.find('[/INST]') + len('[/INST]')
-    return generated_text[start_index:].strip()
+    prompt = f"Detect code smells and suggest refactoring:\n{code}"
+    generated_text = query(prompt)
+    return generated_text if not generated_text.startswith("Error:") else "LLM analysis failed"
 
 def apply_refactoring(smells):
     refactored_code = {}
     for file, issues in smells.items():
-        output = query({"inputs": f"</s>[INST]Refactor the following code while preserving functionality:\n{issues}[/INST]"})
-        if output.startswith("Error:"):
-            refactored_code[file] = "Refactoring failed"
-        else:
-            start_index = output.find('[/INST]') + len('[/INST]')
-            refactored_code[file] = output[start_index:].strip()
-            with open(file, "w") as f:
-                f.write(refactored_code[file])
+        prompt = f"Refactor the following code while preserving functionality:\n{issues}"
+        output = query(prompt)
+        refactored_code[file] = output if not output.startswith("Error:") else "Refactoring failed"
+        with open(file, "w") as f:
+            f.write(refactored_code[file])
     return refactored_code
 
 def create_pull_request(smells, refactored_code):
