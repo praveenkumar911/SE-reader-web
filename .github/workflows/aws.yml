@@ -8,7 +8,7 @@ on:
       - master  # Trigger on pushes to the master branch
 
 jobs:
-  refactor-and-pr:
+  refactor-and-pr: 
     runs-on: ubuntu-latest
 
     steps:
