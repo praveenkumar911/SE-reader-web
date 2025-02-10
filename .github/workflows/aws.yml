@@ -1,19 +1,16 @@
-name: Check and Fix Design Smells
+name: Automated Design Smell Detection & Refactoring
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+  schedule:
+    - cron: '0 0 * * *'  # Runs daily at midnight
+  workflow_dispatch:  # Allows manual triggering
 
 jobs:
-  design_smell_check:
+  detect_and_refactor:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repository
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Set up Python
@@ -21,19 +18,12 @@ jobs:
         with:
           python-version: '3.9'
 
-      - name: Install Dependencies
+      - name: Install dependencies
         run: |
-          pip install requests
+          pip install requests gitpython pygithub
 
-      - name: Check for Design Smells
-        run: |
-          python check_design_smells.py
-
-      - name: Commit and Push Changes
-        run: |
-          git config --global user.name 'praveenkumar911'
-          git config --global user.email 'praveenkumarpalaboyina@gmail.com'
-          git checkout -b design-smell-fixes
-          git add .
-          git commit -m "Fix design smells"
-          git push origin design-smell-fixes
+      - name: Run design smell detection and refactoring
+        env:
+          GITHUB_TOKEN: ${{ secrets.CLASS_TOKEN }}
+          HF_API_KEY: ${{ secrets.HUGGING_TOKEN }}
+        run: python check_design_smells.py  # Ensure your main script is named `script.py`
