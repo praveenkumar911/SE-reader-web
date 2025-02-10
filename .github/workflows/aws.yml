@@ -34,8 +34,8 @@ jobs:
       # Step 5: Create a new branch for the modified files
       - name: Create New Branch
         run: |
-          git config user.name "praveenkumar911"
-          git config user.email "praveenkumarpalaboyina@gmail.com"
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
           git checkout -b design-smell-fixes
 
       # Step 6: Add, commit, and push changes to the new branch
@@ -52,4 +52,4 @@ jobs:
           destination_branch: "main"
           pr_title: "Automated Fixes for Design Smells"
           pr_body: "This PR contains automated fixes for detected design smells."
-          github_token: "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"
+          github_token: ${{ secrets.CLASS_TOKEN }}
