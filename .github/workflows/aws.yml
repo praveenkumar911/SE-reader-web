@@ -5,7 +5,7 @@ name: Refactor Code and Create PR
 on:
   push:
     branches:
-      - master  # Trigger on pushes to the main branch
+      - master  # Trigger on pushes to the master branch
 
 jobs:
   refactor-and-pr:
@@ -33,7 +33,7 @@ jobs:
     # Step 4: Run the refactoring script
     - name: Refactor code
       run: |
-        python check_design_smells.py  # Replace with the actual file path
+        python refactor.py  # No need to pass any arguments
 
     # Step 5: Commit changes
     - name: Commit changes
@@ -53,8 +53,8 @@ jobs:
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v4
       with:
-        token: ${{ secrets.CLASS_TOKEN }}
+        token: ${{ secrets.GITHUB_TOKEN }}
         title: "Refactor Code Using LLM"
         body: "Automated refactoring of code using LLM."
-        base: main
+        base: master
         branch: refactor-branch
