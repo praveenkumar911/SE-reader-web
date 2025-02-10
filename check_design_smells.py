@@ -1,26 +1,30 @@
 import os
 import json
-import openai
+import requests
 from github import Github
-from git import Repo, GitCommandError
+from git import Repo
 
+# GitHub & Hugging Face credentials
 github_token = "${{ secrets.CLASS_TOKEN }}"
-openai_api_key = "${{ secrets.OPENAI_API_KEY }}"
+hf_api_key = "${{ secrets.HUGGING_TOKEN }}"
 
 repo_url = "https://github.com/praveenkumar911/SE-reader-web"
 repo_path = "./repo"
+API_URL = "https://api-inference.huggingface.co/models/bigcode/starcoder"
+headers = {"Authorization": f"Bearer {hf_api_key}"}
 
-def query(prompt):
+def query(payload):
+    response = requests.post(API_URL, headers=headers, json=payload)
     try:
-        response = openai.ChatCompletion.create(
-            model="gpt-4o",
-            messages=[{"role": "system", "content": "You are an expert code reviewer."},
-                      {"role": "user", "content": prompt}]
-        )
-        return response["choices"][0]["message"]["content"].strip()
+        output = response.json()
+        if isinstance(output, dict) and "generated_text" in output:
+            return output["generated_text"]
+        else:
+            print("Unexpected response format:", json.dumps(output, indent=2))
+            return "Error: Unexpected response format"
     except Exception as e:
-        print("Error calling OpenAI API:", str(e))
-        return "Error: API request failed"
+        print("Error parsing response:", str(e))
+        return "Error: Failed to parse API response"
 
 def clone_repo():
     if os.path.exists(repo_path):
@@ -41,14 +45,14 @@ def detect_design_smells():
 
 def analyze_code_with_llm(code):
     prompt = f"Detect code smells and suggest refactoring:\n{code}"
-    generated_text = query(prompt)
+    generated_text = query({"inputs": prompt})
     return generated_text if not generated_text.startswith("Error:") else "LLM analysis failed"
 
 def apply_refactoring(smells):
     refactored_code = {}
     for file, issues in smells.items():
         prompt = f"Refactor the following code while preserving functionality:\n{issues}"
-        output = query(prompt)
+        output = query({"inputs": prompt})
         refactored_code[file] = output if not output.startswith("Error:") else "Refactoring failed"
         with open(file, "w") as f:
             f.write(refactored_code[file])
