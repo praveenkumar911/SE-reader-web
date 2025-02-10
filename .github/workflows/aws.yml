@@ -24,7 +24,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install requests gitpython pygithub
+          pip install requests gitpython pygithub python-dotenv
 
       - name: Run design smell detection and refactoring
         env:
