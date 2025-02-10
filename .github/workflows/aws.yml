@@ -3,49 +3,42 @@ name: Design Smell Detection and Fix Workflow
 on:
   push:
     branches:
-      - main  # Trigger the workflow when changes are pushed to the main branch
+      - main
 
 jobs:
   detect-and-fix-design-smells:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout the repository
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      # Step 2: Set up Python (if your script is written in Python)
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.9'
 
-      # Step 3: Install dependencies for your script
       - name: Install Dependencies
         run: |
-          python -m pip install --upgrade pip
-          pip install libcst  # Example dependency for advanced refactoring (optional)
+          pip install libcst
 
-      # Step 4: Run your script to detect and fix design smells
       - name: Detect and Fix Design Smells
         run: |
-          python detect_and_fix_smells.py  # Replace with the actual script name if different
+          python detect_and_fix_smells.py
 
-      # Step 5: Create a new branch for the modified files
       - name: Create New Branch
         run: |
-          git config user.name "GitHub Actions"
-          git config user.email "actions@github.com"
+          git config user.name "praveenkumar911"
+          git config user.email "praveenkumarpalaboyina@gmail.com"
           git checkout -b design-smell-fixes
 
-      # Step 6: Add, commit, and push changes to the new branch
       - name: Commit and Push Changes
         run: |
+          git remote set-url origin https://x-access-token:${{ secrets.CLASS_TOKEN }}@github.com/praveenkumar911/SE-reader-web.git
           git add .
           git commit -m "Automated fixes for design smells"
           git push origin design-smell-fixes
 
-      # Optional: Open a Pull Request to merge the changes into the main branch
       - name: Open Pull Request
         uses: repo-sync/pull-request@v2
         with:
