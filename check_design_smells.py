@@ -5,8 +5,8 @@ from github import Github
 from git import Repo
 
 # GitHub & Hugging Face credentials
-github_token = "${{ secrets.CLASS_TOKEN }}"
-hf_api_key = "${{ secrets.HUGGING_TOKEN }}"
+github_token = "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"
+hf_api_key = "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"
 
 repo_url = "https://github.com/praveenkumar911/SE-reader-web"
 repo_path = "./repo"
