@@ -3,10 +3,13 @@ import json
 import requests
 from github import Github
 from git import Repo
+from dotenv import load_dotenv
 
-# GitHub & Hugging Face credentials
-github_token = "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"
-hf_api_key = "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"
+# Load environment variables
+load_dotenv()
+
+github_token = os.getenv("GITHUB_TOKEN")
+hf_api_key = os.getenv("HF_API_KEY")
 
 repo_url = "https://github.com/praveenkumar911/SE-reader-web"
 repo_path = "./repo"
