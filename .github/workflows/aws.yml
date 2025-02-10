@@ -30,4 +30,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.CLASS_TOKEN }}
           HF_API_KEY: ${{ secrets.HUGGING_TOKEN }}
-        run: python check_design_smells.py
+        run: python check_design_smells.py https://github.com/praveenkumar911/SE-reader-web/blob/main/UserResource.java
